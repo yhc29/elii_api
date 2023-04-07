@@ -88,8 +88,18 @@ class ValueSearch(Resource):
         result = query_client.value_search(value)
         return restful_result(HttpCode.ok,'success',result)
 
+class PatientInfo(Resource):
+    # http://127.0.0.1:5000/patient/info?ptid=PT208504594
+    query_args = {
+      "ptid": fields.Str(required=True)}
+    
+    @use_args(query_args, location="query")
+    def get(self,args):
+      doc = query_client.db_tlii["cov_pt_records"].find_one({"pt_group":int(args['ptid'][-2:]),'PTID':args['ptid']})
+      result = {'PTID':doc["PTID"], 'BIRTH_YR':doc['BIRTH_YR'], 'GENDER':doc['GENDER'], 'RACE':doc['RACE']}
+      return restful_result(HttpCode.ok,'success',result)
 class PtTimeline(Resource):
-    # http://127.0.0.1:5000//patient/timeline?ptid=PT208504594
+    # http://127.0.0.1:5000/patient/timeline?ptid=PT208504594
     query_args = {
       "ptid": fields.Str(required=True)}
     
@@ -103,6 +113,7 @@ api.add_resource(BasicQuery, '/query/basic')
 api.add_resource(AbsoluteTemporalQuery, '/query/absolute_temporal')
 api.add_resource(RelativeTemporalQuery, '/query/relative_temporal')
 api.add_resource(ValueSearch, '/query/value_search')
+api.add_resource(PatientInfo, '/patient/info')
 api.add_resource(PtTimeline, '/patient/timeline')
 
 
