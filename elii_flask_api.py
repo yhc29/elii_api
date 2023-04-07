@@ -88,10 +88,22 @@ class ValueSearch(Resource):
         result = query_client.value_search(value)
         return restful_result(HttpCode.ok,'success',result)
 
+class PtTimeline(Resource):
+    # http://127.0.0.1:5000//patient/timeline?ptid=PT208504594
+    query_args = {
+      "ptid": fields.Str(required=True)}
+    
+    @use_args(query_args, location="query")
+    def get(self,args):
+        timeline = query_client.get_pt_timeline(args['ptid'])
+        result = {'ptid':args['ptid'],'timeline':timeline}
+        return restful_result(HttpCode.ok,'success',result)
+
 api.add_resource(BasicQuery, '/query/basic')
 api.add_resource(AbsoluteTemporalQuery, '/query/absolute_temporal')
 api.add_resource(RelativeTemporalQuery, '/query/relative_temporal')
 api.add_resource(ValueSearch, '/query/value_search')
+api.add_resource(PtTimeline, '/patient/timeline')
 
 
 if __name__ == '__main__':

@@ -710,6 +710,22 @@ class QueryClient:
           result[-1][2] = end_date
     return result
 
+  def get_pt_timeline(self,ptid,cols=['cov_diag','cov_vis','cov_obs','cov_proc','cov_lab','cov_rx_adm','cov_rx_immun','cov_rx_presc','cov_rx_patrep']):
+    timeline = []
+    ap_stmt =[
+      { "$match" : {"pt_group":int(ptid[-2:]),"PTID":ptid}},
+      { "$project" : {"_id":0,"pt_group":0,"PTID":0}},
+      { "$unwind" : "$date_list" },
+      { "$sort" : {"date_list":-1 } },
+    ]
+    for col_name in cols:
+      docs = self.db_tlii[col_name+"_pt_timeline"].aggregate(ap_stmt,allowDiskUse=False)
+      for doc in docs:
+        doc['date'] = doc.pop('date_list')
+        timeline.append(doc)
+    timeline = sorted(timeline, key=lambda x: x['date'])
+    return timeline
+  
   def get_record_list(self,ptid_list,query_dict,query_period_dict,return_type="all"):
     result = {}
     for ptid in ptid_list:
