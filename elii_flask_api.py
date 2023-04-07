@@ -38,7 +38,7 @@ class BasicQuery(Resource):
     @use_args(query_args, location="query")
     def get(self,args):
         query_stmt = { args['col_name'] : { args['concept']  : args['value'] } }
-        {'cov_diag':{'DIAGNOSIS_CD':'U071','DIAGNOSIS_CD_TYPE':'icd10',}}
+        # query_stmt = {'cov_diag':{'DIAGNOSIS_CD':'U071','DIAGNOSIS_CD_TYPE':'icd10'git }}
         ptid_list = query_client.basic_query(query_stmt)
         result = {'pt_count':len(ptid_list),'ptid_list':ptid_list[:10]}
         return restful_result(HttpCode.ok,'success',result)
