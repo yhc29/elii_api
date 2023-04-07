@@ -1,7 +1,7 @@
 data_version = "20220120"
 SERVER_NAME = "IBM"
 
-mongo_url = "mongodb://dbusername:dbpassword@mongodplp001.uth.tmc.edu:39000/?authSource=admin&authMechanism=SCRAM-SHA-256"
+mongo_url = "mongodb://dbusername:dbpassword@xx.xx.xx:port/?authSource=admin&authMechanism=SCRAM-SHA-256"
 
 db_elii_name = "optum_covid19_elii_20220120"
 db_data_name = "optum_covid_development"
